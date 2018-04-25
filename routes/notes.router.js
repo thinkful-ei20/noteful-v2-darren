@@ -88,7 +88,7 @@ router.put('/notes/:id', (req, res, next) => {
 
   /***** Never trust users - validate input *****/
   const updateObj = {};
-  const updateableFields = ['title', 'content'];
+  const updateableFields = ['title', 'content', 'folder_id'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -103,18 +103,21 @@ router.put('/notes/:id', (req, res, next) => {
     return next(err);
   }
 
+
   knex('notes')  
-    .modify(queryBuilder => {
-      if(!updateObj.content) {
-        queryBuilder.update({'title': `${updateObj.title}`});
-      } else {
-        queryBuilder.update({'title': `${updateObj.title}`, 'content':`${updateObj.content}`});
-      }
+    .update(updateObj)
+    .where('notes.id', id) 
+    .returning('id')
+    .then(([id]) => {
+      
+      // Using the new id, select the new note and the folder
+      return knex.select('notes.id', 'title', 'content', 'folder_id', 'folders.name as folder_name')
+        .from('notes')
+        .leftJoin('folders', 'notes.folder_id', 'folders.id')
+        .where('notes.id', id);
     })
-    .where('notes.id', `${id}`) 
-    .returning(['title','content'])
-    .then(results => {
-      res.json(results[0]);
+    .then(([result]) => {
+      res.json(result);
     })
     .catch(err => {
       next(err);
