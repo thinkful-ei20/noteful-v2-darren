@@ -30,6 +30,37 @@ router.get('/folders/:id', (req,res,next) => {
     });
 });
 
+router.put('/folders/:id', (req,res,next) => {
+  const id = req.params.id;
+
+  const updateObj = {};
+  const updateableFields = ['name'];
+
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updateObj[field] = req.body[field];
+    }
+  });
+
+  if (!updateObj.name) {
+    const err = new Error('Missing `name` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  knex('folders')
+    .update(updateObj)
+    .where('folders.id', id)
+    .returning(['id','name'])
+    .then(([result]) => {
+      res.json(result);
+    })
+    .catch(err => {
+      next(err);
+    });
+
+});
+
 
 
 
