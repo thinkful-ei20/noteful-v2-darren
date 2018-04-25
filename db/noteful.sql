@@ -22,3 +22,18 @@ VALUES
 ('11 ways investing in cats can make you a millionaire','ullamco laboris'),
 ('Why you SHOULD forget everything you learned about cats','Tempor nec feugiat nisl pretium.');
 
+DROP TABLE IF EXISTS folders;
+
+CREATE TABLE folders (
+  id SERIAL PRIMARY KEY,
+  name text NOT NULL
+);
+
+ALTER SEQUENCE folders_id_seq RESTART WITH 100;
+
+INSERT INTO folders (name)
+VALUES
+('Archive'),
+('Drafts'),
+('Personal'),
+('Work');
