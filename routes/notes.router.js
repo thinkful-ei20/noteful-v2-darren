@@ -48,39 +48,33 @@ router.get('/notes', (req, res, next) => {
 
 // Get a single item
 router.get('/notes/:id', (req, res, next) => {
-  const id = req.params.id;
+  const noteId = req.params.id;
 
   knex
-    .select('notes.id','title','content','folders.id as folder_id', 'folders.name as folderName')
+    .select('notes.id', 'title', 'content', 'folders.id as folder_id', 'folders.name as folderName')
     .from('notes')
-    .leftJoin('folders','notes.folder_id','folders.id')
-    // .modify(queryBuilder => {
-    //   queryBuilder.select('id').from('notes').where({'notes.id':`${id}`}).first();
-    // })      
-    .where('notes.id', id)
-    .then(results => {
-      if(!results) {
-        res.status(404);
-        // next();
-      }
-      res.json(results);
+    .innerJoin('folders', 'notes.folder_id', 'folders.id')
+    .where({ 'notes.id': noteId })
+    .orderBy('notes.id')
+    .then(([result]) => {
+      res.json(result);
     })
     .catch(err => {
       next(err);
     });
-
-  // notes.find(id)
-  //   .then(item => {
-  //     if (item) {
-  //       res.json(item);
-  //     } else {
-  //       next();
-  //     }
-  //   })
-  //   .catch(err => {
-  //     next(err);
-  //   });
 });
+
+// notes.find(id)
+//   .then(item => {
+//     if (item) {
+//       res.json(item);
+//     } else {
+//       next();
+//     }
+//   })
+//   .catch(err => {
+//     next(err);
+//   });
 
 // Put update an item
 router.put('/notes/:id', (req, res, next) => {
