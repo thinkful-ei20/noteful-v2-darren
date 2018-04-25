@@ -15,6 +15,20 @@ router.get('/folders', (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.get('/folders/:id', (req,res,next) => {
+  const id = req.params.id;
+
+  knex
+    .select('id','name')
+    .from('folders')
+    .where('id',id)
+    .then(([result]) => {
+      res.json(result);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 
 
