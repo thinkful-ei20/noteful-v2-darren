@@ -127,7 +127,7 @@ router.post('/notes', (req, res, next) => {
   const newItem = {
     title,
     content,
-    folder_id: (folder_id) ? folder_id : null 
+    folder_id: folder_id 
   };
 
   /***** Never trust users - validate input *****/
