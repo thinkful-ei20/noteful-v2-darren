@@ -6,6 +6,11 @@ const express = require('express');
 const router = express.Router();
 
 const knex = require('../knex');
+
+const hydrateNotes = require('../utils/hydrateNotes');
+
+
+
 // Get All (and search by query)
 router.get('/notes', (req, res, next) => {
   const { searchTerm,folderId } = req.query;
@@ -27,9 +32,13 @@ router.get('/notes', (req, res, next) => {
       }
     })
     .orderBy('notes.id')
-    .then(results => {
-      // console.log(JSON.stringify(results, null, 2));
-      res.json(results);
+    .then(result => {
+      if (result) {
+        const hydrated = hydrateNotes(result);
+        res.json(hydrated);
+      } else {
+        next();
+      }
     })
     .catch(err => {
       next(err);
