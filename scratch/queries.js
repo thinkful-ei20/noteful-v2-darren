@@ -61,12 +61,16 @@ const knex = require('../knex');
 //     next(err);
 //   });
 
-knex('notes')
-  .where('notes.id', `${id}`)
-  .del()
-  .then(results => {
-    res.status(204).json(results);
-  })
-  .catch(err => {
-    next(err);
-  });
+// knex('notes')
+//   .where('notes.id', `${id}`)
+//   .del()
+//   .then(results => {
+//     res.status(204).json(results);
+//   })
+//   .catch(err => {
+//     next(err);
+//   });
+
+// const noteId = 99;
+// const result = [34, 56, 78].map(tagId => ({ note_id: noteId, tag_id: tagId }));
+// console.log(`insert: ${result} into notes_tags`);
