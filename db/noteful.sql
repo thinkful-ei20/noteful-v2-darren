@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS folders CASCADE;
 
 CREATE TABLE folders (
   id SERIAL PRIMARY KEY,
-  name text NOT NULL
+  name text NOT NULL UNIQUE
 );
 
 ALTER SEQUENCE folders_id_seq RESTART WITH 100;
@@ -22,7 +22,7 @@ ALTER SEQUENCE notes_id_seq RESTART WITH 1001 INCREMENT BY 1;
 
 CREATE TABLE tags (
   id SERIAL PRIMARY KEY,
-  name text NOT NULL
+  name text NOT NULL UNIQUE
 );
 
 CREATE TABLE notes_tags (
