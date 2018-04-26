@@ -134,7 +134,12 @@ router.put('/notes/:id', (req, res, next) => {
 router.post('/notes', (req, res, next) => {
   const { title, content, folder_id } = req.body;
 
-  const newItem = { title, content,folder_id };
+  const newItem = {
+    title,
+    content,
+    folder_id: (folder_id) ? folder_id : null 
+  };
+  
   /***** Never trust users - validate input *****/
   if (!newItem.title) {
     const err = new Error('Missing `title` in request body');

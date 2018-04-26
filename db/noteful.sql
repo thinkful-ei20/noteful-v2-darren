@@ -1,4 +1,14 @@
+DROP TABLE IF EXISTS notes_tags CASCADE;
+DROP TABLE IF EXISTS tags CASCADE;
 DROP TABLE IF EXISTS notes;
+DROP TABLE IF EXISTS folders CASCADE;
+
+CREATE TABLE folders (
+  id SERIAL PRIMARY KEY,
+  name text NOT NULL
+);
+
+ALTER SEQUENCE folders_id_seq RESTART WITH 100;
 
 CREATE TABLE notes(
   id SERIAL PRIMARY KEY,
@@ -9,6 +19,23 @@ CREATE TABLE notes(
 );
 
 ALTER SEQUENCE notes_id_seq RESTART WITH 1001 INCREMENT BY 1;
+
+CREATE TABLE tags (
+  id SERIAL PRIMARY KEY,
+  name text NOT NULL
+);
+
+CREATE TABLE notes_tags (
+  note_id INTEGER NOT NULL REFERENCES notes ON DELETE CASCADE,
+  tag_id INTEGER NOT NULL REFERENCES tags ON DELETE CASCADE
+);
+
+INSERT INTO folders (name)
+VALUES
+('Archive'),
+('Drafts'),
+('Personal'),
+('Work');
 
 INSERT INTO notes (title,content,folder_id)
 VALUES 
@@ -23,18 +50,21 @@ VALUES
 ('11 ways investing in cats can make you a millionaire','ullamco laboris',101),
 ('Why you SHOULD forget everything you learned about cats','Tempor nec feugiat nisl pretium.',101);
 
-DROP TABLE IF EXISTS folders CASCADE;
 
-CREATE TABLE folders (
-  id SERIAL PRIMARY KEY,
-  name text NOT NULL
-);
-
-ALTER SEQUENCE folders_id_seq RESTART WITH 100;
-
-INSERT INTO folders (name)
+INSERT INTO tags (name)
 VALUES
-('Archive'),
-('Drafts'),
-('Personal'),
-('Work');
+('funny'),
+('stupid'),
+('smart');
+
+INSERT INTO notes_tags (note_id, tag_id) 
+VALUES
+('1003','1'),
+('1005','2'),
+('1001','3'),
+('1003','1'),
+('1005','2'),
+('1009','3'),
+('1008','1'),
+('1005','3'),
+('1002','3');
