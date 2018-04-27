@@ -2,4 +2,11 @@ language: node_js
 node_js: node
 services: postgresql
 before_script:
-  - psql -U postgres -c 'CREATE DATABASE "noteful-test";'
+- psql -U postgres -c 'CREATE DATABASE "noteful-test";'
+deploy:
+  provider: heroku
+  api_key:
+    secure: eNXpx5WnA3msj4vqYcsBDhVitsAzwwSfOoZx4OAPPicgbcwGApsZY3MzlirvofJM2ouD8ArpzLtzB+I7o4VPaTsmEih/kaVnT+8MNd5PlncJL6HxkrTybCuuDNL8KCr2pBbqjT4DVet2MKWJRiYCUK6s7F6fsMr3a1d/xycTroKDSc1Md58gnCBwKIzsGQdOfqwiyj0xCXNUzgOG+oh1GsI5/VPTzhDqEfO2DltltdWYZ37EcOFrEsVdN8d7VuFPXIJsDOixsGRUcYjCe8KoF5sW8Jp+34AcfQZVkgDMOcgfYs4/wky6BDL+qarU5Gljfv3bhvW/4JMg8FsSSo1ZgWomhFuhI5BpUxApiCtU2LTmLkZ+Ur8RmxrzS9EP19LfdR08xMczswzzTaWjclygUuIi+HCuJBu32/GT9cg9lsLU9v94LLDBK0+/ESgJCRLYf5m+crE6BullINntPpzKMSZ8pddPTdC6YldO3OsGUcZJTq1AOEqwREMRLQc/qRVWTrLCqeZ3e1qYztd4lOUSnd6I937e1Ao3GrCWPrIR1jHzNrlGeHlh44oYygeYj+rjfqKItmf72J5UVg7w+hmU63kHF6cKJ87UWXxFl5d0b9H24LPZoHg9NOmcH/raLGbE2O0KstrmXnDci37nrV7Zpa+/mSaMWO8PLlyUYycJSL8=
+  app: noteful-v2-darren
+  on:
+    repo: thinkful-ei20/noteful-v2-darren
