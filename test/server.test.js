@@ -147,6 +147,12 @@ describe('Noteful App', function () {
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
           expect(res.body).to.have.length(0);
+          return knex.select().from('notes').where({title : 'Trash title does not exist'});
+        })
+        .then(data => {
+          expect(data).to.be.a('array');
+          expect(data).to.have.length(0);
+          expect(data[0]).to.equal(undefined);
         });
     });
 
