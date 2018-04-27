@@ -93,10 +93,12 @@ describe('Noteful App', function () {
         });
     });
 
+    //my version
     it('should return a list with the correct right fields', function () {
-      return chai.request(app)
-        .get('/api/notes')
-        .then(function (res) {
+      let res;
+      return chai.request(app).get('/api/notes')
+        .then(function (_res) {
+          res = _res;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
@@ -105,8 +107,18 @@ describe('Noteful App', function () {
             expect(item).to.be.a('object');
             expect(item).to.include.keys('id', 'title', 'content');
           });
+          return knex.select().from('notes');
+        })
+        .then(data => {
+          data.forEach(function(note,index) {
+            expect(note).to.be.a('object');
+            expect(note).to.include.keys('id', 'title', 'content');
+            expect(note.id).to.equal(res.body[index].id);
+            expect(note.title).to.equal(res.body[index].title);
+            expect(note.content).to.equal(res.body[index].content);
+          });  
         });
-    });
+    });   
 
     it('should return correct search results for a valid query', function () {
       let res;
@@ -125,16 +137,30 @@ describe('Noteful App', function () {
         });
     });
 
+    //myupdate on return empty array for an incorrect query:
     it('should return an empty array for an incorrect query', function () {
-      return chai.request(app)
-        .get('/api/notes?searchTerm=Not%20a%20Valid%20Search')
-        .then(function (res) {
+      let res;
+      return chai.request(app).get('/api/notes?searchTerm=Not%20a%20Valid%20Search')
+        .then(function (_res) {
+          res = _res;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('array');
           expect(res.body).to.have.length(0);
         });
     });
+
+
+    // it('should return an empty array for an incorrect query', function () {
+    //   return chai.request(app)
+    //     .get('/api/notes?searchTerm=Not%20a%20Valid%20Search')
+    //     .then(function (res) {
+    //       expect(res).to.have.status(200);
+    //       expect(res).to.be.json;
+    //       expect(res.body).to.be.a('array');
+    //       expect(res.body).to.have.length(0);
+    //     });
+    // });
 
   });
 
