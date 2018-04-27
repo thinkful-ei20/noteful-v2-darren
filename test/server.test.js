@@ -155,19 +155,7 @@ describe('Noteful App', function () {
           expect(data[0]).to.equal(undefined);
         });
     });
-
-
-    // it('should return an empty array for an incorrect query', function () {
-    //   return chai.request(app)
-    //     .get('/api/notes?searchTerm=Not%20a%20Valid%20Search')
-    //     .then(function (res) {
-    //       expect(res).to.have.status(200);
-    //       expect(res).to.be.json;
-    //       expect(res.body).to.be.a('array');
-    //       expect(res.body).to.have.length(0);
-    //     });
-    // });
-
+    
   });
 
   describe('GET /api/notes/:id', function () {
@@ -192,11 +180,17 @@ describe('Noteful App', function () {
         });
     });
 
+    
     it('should respond with a 404 for an invalid id', function () {
       return chai.request(app)
         .get('/DOES/NOT/EXIST')
         .then(res => {
           expect(res).to.have.status(404);
+          return knex.select().from('notes').where({id: 9999});
+        })
+        .then(data => {
+          expect(data).to.be.a('array');
+          expect(data).to.have.length(0);
         });
     });
 
@@ -241,6 +235,11 @@ describe('Noteful App', function () {
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body.message).to.equal('Missing `title` in request body');
+          return knex.select().from('notes').where({id : 1012});
+        })
+        .then(data => {
+          expect(data).to.be.a('array');
+          expect(data).to.have.length(0);
         });
     });
 
@@ -299,12 +298,18 @@ describe('Noteful App', function () {
   });
 
   describe('DELETE  /api/notes/:id', function () {
+    let deleteId = 1005;
 
     it('should delete an item by id', function () {
       return chai.request(app)
-        .delete('/api/notes/1005')
+        .delete(`/api/notes/${deleteId}`)
         .then(function (res) {
           expect(res).to.have.status(204);
+          return knex.select().from('notes').where('id', deleteId);
+        })
+        .then(data => {
+          expect(data).to.be.a('array');
+          expect(data).to.have.length(0);         
         });
     });
 
