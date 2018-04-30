@@ -12,6 +12,7 @@ const chaiHttp = require('chai-http');
 const knex = require('../knex');
 const seedData = require('../db/seedData');
 const expect = chai.expect;
+chai.config.includeStack = true;
 
 chai.use(chaiHttp);
 
@@ -42,7 +43,7 @@ describe('Environment', () => {
 describe('Noteful App', function () {
 
   beforeEach(function () {
-    return seedData('./db/noteful.sql', 'postgres');
+    return seedData('./db/noteful.sql');
   });
 
   after(function () {
@@ -93,7 +94,6 @@ describe('Noteful App', function () {
         });
     });
 
-    //my version
     it('should return a list with the correct right fields', function () {
       let res;
       return chai.request(app).get('/api/notes')
@@ -252,10 +252,15 @@ describe('Noteful App', function () {
         'title': 'What about dogs?!',
         'content': 'woof woof'
       };
+      // let body;
+      let res;
       return chai.request(app)
         .put('/api/notes/1005')
         .send(updateItem)
-        .then(function (res) {
+        .then(function (_res) {
+          res = _res;
+          // body = res.body;
+          // console.log(res.body.id);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
@@ -264,6 +269,12 @@ describe('Noteful App', function () {
           expect(res.body.id).to.equal(1005);
           expect(res.body.title).to.equal(updateItem.title);
           expect(res.body.content).to.equal(updateItem.content);
+          return knex.select().from('notes').where('id', res.body.id );
+        })
+        .then(data => {
+          expect(data).to.be.a('array');
+          expect(data.title).to.equal(res.title);  
+          expect(data.content).to.equal(res.content); 
         });
     });
 
@@ -314,5 +325,53 @@ describe('Noteful App', function () {
     });
 
   });
+
+  // ---FOLDERS---
+
+  describe('GET /api/folders', function () {
+
+    it('should return the folders ', function () {
+      let count;
+      return knex.count()
+        .from('folders')
+        .then(([result]) => {
+          count = Number(result.count);
+          return chai.request(app).get('/api/folders');
+        })
+        .then(function (res) {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('array');
+          expect(res.body).to.have.length(count);
+        });
+    });
+  });
+  
+  it('should return a list with the correct folder fields', function () {
+    let res;
+    return chai.request(app).get('/api/folders')
+      .then(function (_res) {
+        res = _res;
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.have.length(4);
+        res.body.forEach(function (item) {
+          expect(item).to.be.a('object');
+          expect(item).to.include.keys('id', 'name');
+        });
+        return knex.select().from('folders');
+      })
+      .then(data => {
+        data.forEach(function(folder,index) {
+          expect(folder).to.be.a('object');
+          expect(folder).to.include.keys('id', 'name');
+          expect(folder.id).to.equal(res.body[index].id);
+          expect(folder.name).to.equal(res.body[index].name);
+        });  
+      });
+  });   
+  
+
 
 });
