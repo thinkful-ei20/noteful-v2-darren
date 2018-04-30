@@ -43,7 +43,7 @@ describe('Environment', () => {
 describe('Noteful App', function () {
 
   beforeEach(function () {
-    return seedData('./db/noteful.sql');
+    return seedData('./db/noteful.sql', process.env.DATABASE_USER || 'dev');
   });
 
   after(function () {

@@ -18,11 +18,6 @@ module.exports = {
     connection: process.env.TEST_DATABASE_URL || 'postgres://dev:dev@localhost/noteful-test',
     pool: { min: 1, max: 2 }
   },
-  travis: {
-    client: 'pg',
-    connection: 'postgres://postgres:@localhost/noteful-test',
-    pool: { min: 1, max: 2 }
-  }
 };
 
 
