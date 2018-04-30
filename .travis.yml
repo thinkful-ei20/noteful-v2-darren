@@ -11,5 +11,4 @@ deploy:
   on:
     repo: thinkful-ei20/noteful-v2-darren
 env: 
-  - TEST_DATABASE_URL=postgres://postgres:@localhost/noteful-test
-  - DATABASE_USER=postgres
+  - TEST_DATABASE_URL=postgres://postgres:@localhost/noteful-test DATABASE_USER=postgres
