@@ -10,3 +10,6 @@ deploy:
   app: noteful-v2-darren
   on:
     repo: thinkful-ei20/noteful-v2-darren
+env: 
+- NODE_ENV=travis
+
